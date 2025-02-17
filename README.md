@@ -1,5 +1,7 @@
 This repository contains Python scripts for encrypting and decrypting secret messages within images using steganography. The scripts allow you to hide a message in an image and later extract it using a passcode.
 Files Included
+
+
     encryption.py: Encrypts a secret message into an image.
 
     decryption.py: Decrypts the secret message from the encrypted image.
