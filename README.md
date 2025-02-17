@@ -18,7 +18,7 @@ Requirements
 
 To install the required libraries, run:
 bash
-Copy
+
 
 pip install opencv-python
 
@@ -32,7 +32,7 @@ Steps:
 
     Run the script:
     bash
-    Copy
+ 
 
     python encryption.py
 
@@ -49,7 +49,7 @@ Steps:
 
     Run the script:
     bash
-    Copy
+
 
     python decryption.py
 
@@ -66,7 +66,7 @@ Steps:
 
     Run the script:
     bash
-    Copy
+
 
     python stegocode.py
 
@@ -106,7 +106,7 @@ Notes
 Example
 Encryption:
 bash
-Copy
+
 
 $ python encryption.py
 Enter secret message: Hello, World!
@@ -116,7 +116,7 @@ Enter a passcode: mypassword
 
 Decryption:
 bash
-Copy
+
 
 $ python decryption.py
 Enter the passcode to decrypt the message: mypassword
