@@ -1,33 +1,45 @@
 import cv2
 import os
 
-# Read the image
-img = cv2.imread("mypic.jpg")  # Replace with the correct image path
-if img is None:
-    print("Error: Image not found or unable to read")
-    exit()
+def encrypt_image(img_path, msg, password):
+    # Load the image
+    img = cv2.imread(img_path)
+    if img is None:
+        print("Error: Image not found or unable to load.")
+        return
 
-# Input secret message and passcode
-msg = input("Enter secret message:")
-password = input("Enter a passcode:")
+    # Ensure the message length fits within the image
+    if len(msg) > img.shape[0] * img.shape[1]:
+        print("Error: Message too long for the image.")
+        return
 
-# Create dictionaries for encoding and decoding
-d = {}
-for i in range(255):
-    d[chr(i)] = i
+    # Embed the secret message into the image
+    index = 0
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            for k in range(3):  # Iterate over RGB channels
+                if index < len(msg):
+                    img[i, j, k] = ord(msg[index])  # Embed character ASCII value
+                    index += 1
+                else:
+                    break
 
-# Initialize variables
-m = 0
-n = 0
-z = 0
+    # Save the encrypted image in a lossless format
+    encrypted_image_path = "encryptedImage.png"
+    cv2.imwrite(encrypted_image_path, img)
+    print(f"Image encrypted and saved as {encrypted_image_path}")
 
-# Encrypt the message into the image
-for i in range(len(msg)):
-    img[n, m, z] = d[msg[i]]
-    n = n + 1
-    m = m + 1
-    z = (z + 1) % 3
+    # Save the password and message length to a file
+    with open("encryption_info.txt", "w") as f:
+        f.write(f"{password}\n{len(msg)}")
 
-# Save the encrypted image
-cv2.imwrite("encryptedImage.jpg", img)
-os.system("start encryptedImage.jpg")  # Use 'start' to open the image on Windows
+    # Open the encrypted image (for Windows)
+    os.system(f"start {encrypted_image_path}")
+
+# Inputs for encryption
+img_path = "mypic.jpg"  # Replace with the correct image path
+msg = input("Enter secret message: ")
+password = input("Enter a passcode: ")
+
+# Perform encryption
+encrypt_image(img_path, msg, password)

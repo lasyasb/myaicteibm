@@ -1,31 +1,43 @@
 import cv2
 
-# Read the encrypted image
-img = cv2.imread("encryptedImage.jpg")  # Replace with the correct image path
-if img is None:
-    print("Error: Encrypted image not found or unable to read")
-    exit()
+def decrypt_image(encrypted_image_path, password):
+    # Load the encrypted image
+    img = cv2.imread(encrypted_image_path)
+    if img is None:
+        print("Error: Encrypted image not found or unable to load.")
+        return
 
-# Input passcode for verification (optional)
-password = input("Enter the passcode to decrypt the message:")
+    # Read the password and message length from the file
+    try:
+        with open("encryption_info.txt", "r") as f:
+            saved_password = f.readline().strip()
+            msg_length = int(f.readline().strip())
+    except FileNotFoundError:
+        print("Error: Encryption info file not found.")
+        return
 
-# Create dictionaries for decoding
-d = {}
-for i in range(255):
-    d[i] = chr(i)
+    # Verify the passcode
+    if password != saved_password:
+        print("YOU ARE NOT AUTHORIZED")
+        return
 
-# Initialize variables
-m = 0
-n = 0
-z = 0
+    # Extract the secret message from the image
+    message = ""
+    index = 0
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            for k in range(3):  # Iterate over RGB channels
+                if index < msg_length:
+                    message += chr(img[i, j, k])  # Extract character from pixel value
+                    index += 1
+                else:
+                    break
 
-# Decrypt the message from the image
-decrypted_msg = ""
-for i in range(len(msg)):  # Assuming the length of the message is known or can be determined
-    decrypted_msg += d[img[n, m, z]]
-    n = n + 1
-    m = m + 1
-    z = (z + 1) % 3
+    print("Decrypted message:", message)
 
-# Output the decrypted message
-print("Decrypted message:", decrypted_msg)
+# Inputs for decryption
+encrypted_image_path = "encryptedImage.png"
+pas = input("Enter passcode for Decryption: ")
+
+# Perform decryption
+decrypt_image(encrypted_image_path, pas)
